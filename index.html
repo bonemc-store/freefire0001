@@ -396,7 +396,11 @@
       const password = $('#loginPassword').value;
       try{
         const res = await auth.signInWithEmailAndPassword(email, password);
-        if(!res.user.emailVerified){ toast('Please verify email first','warn'); return; }
+        // Email verify ka check hata diya:
+    // if(!res.user.emailVerified){ 
+    //   $('#authMsg').textContent = 'Please verify email first.'; 
+    //   return; 
+    // }
         toast('Login successful');
       }catch(err){ toast(err.message,'bad'); }
     }
