@@ -455,12 +455,13 @@
         $('#app').classList.add('hidden');
         return;
       }
-      if(!u.emailVerified){
-        $('#authMsg').textContent = 'Email not verified. Please verify first.';
-        $('#authScreen').classList.remove('hidden');
-        $('#app').classList.add('hidden');
-        return;
-      }
+      // Email verification check hata diya:
+  // if(!u.emailVerified){
+  //   $('#authMsg').textContent = 'Email not verified. Please verify first.';
+  //   $('#authScreen').classList.remove('hidden');
+  //   $('#app').classList.add('hidden');
+  //   return;
+  // }
       S.user = u;
       $('#authScreen').classList.add('hidden');
       $('#app').classList.remove('hidden');
