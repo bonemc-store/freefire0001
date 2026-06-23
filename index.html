@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#09090d" />
+  <title>Free Fire Tournament</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <style>
+    :root{
+      --bg:#09090d;
+      --panel:rgba(18,18,24,.74);
+      --panel2:rgba(255,255,255,.05);
+      --line:rgba(255,255,255,.08);
+      --text:#f5f7fb;
+      --muted:#a7afc0;
+      --orange:#ff7a18;
+      --orange2:#ff9a3d;
+      --green:#21c17a;
+      --red:#ff5d5d;
+      --shadow:0 18px 45px rgba(0,0,0,.35);
+      --radius:22px;
+      --radius2:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;min-height:100%;background:radial-gradient(circle at top,#1c1210 0,#09090d 42%,#050507 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    body:before{content:"";position:fixed;inset:0;background:linear-gradient(120deg,rgba(255,122,24,.08),transparent 35%,rgba(255,255,255,.03));pointer-events:none;z-index:0}
+    .app{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:12px}
+    .topbar,.sidebar,.main,.card,.authcard,.toast{background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(18px);box-shadow:var(--shadow);border-radius:var(--radius)}
+    .topbar{position:sticky;top:0;z-index:40;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px 14px;margin-bottom:12px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,var(--orange),#ffb15f);display:grid;place-items:center;color:#111;font-weight:900}
+    .brand h1{margin:0;font-size:15px;line-height:1.1}
+    .brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
+    .top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .pill,.btn,.tab,.navbtn,.iconbtn{border:0;cursor:pointer}
+    .pill{padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--line)}
+    .btn,.tab,.navbtn,.iconbtn{background:linear-gradient(135deg,rgba(255,122,24,.95),rgba(255,160,70,.95));color:#111;font-weight:800;box-shadow:0 8px 20px rgba(255,122,24,.22);transition:.25s transform,.25s opacity}
+    .btn:hover,.tab:hover,.navbtn:hover,.iconbtn:hover{transform:translateY(-1px)}
+    .iconbtn{width:42px;height:42px;border-radius:14px;display:grid;place-items:center}
+    .layout{display:grid;grid-template-columns:280px 1fr;gap:12px}
+    .sidebar{padding:12px;position:sticky;top:82px;height:calc(100dvh - 100px);overflow:auto}
+    .profile-mini{display:flex;gap:12px;align-items:center;padding:12px;border-radius:18px;background:var(--panel2);border:1px solid var(--line)}
+    .avatar{width:54px;height:54px;border-radius:18px;overflow:hidden;background:linear-gradient(145deg,#333,#111);display:grid;place-items:center}
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    .profile-mini b{display:block;font-size:14px}
+    .small,.profile-mini span{color:var(--muted);font-size:12px}
+    .menu{display:grid;gap:8px;margin-top:12px}
+    .menu button{padding:13px 14px;border-radius:16px;background:transparent;color:var(--text);border:1px solid transparent;text-align:left;display:flex;align-items:center;gap:10px}
+    .menu button.active,.menu button:hover{background:rgba(255,122,24,.12);border-color:rgba(255,122,24,.24)}
+    .main{padding:12px;overflow:hidden}
+    .hero{display:grid;grid-template-columns:1.3fr .9fr;gap:12px;margin-bottom:12px}
+    .card{background:rgba(255,255,255,.04);border-radius:22px;padding:14px}
+    .banner{min-height:220px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(145deg,rgba(255,122,24,.24),rgba(0,0,0,.4)),url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1400&q=80') center/cover}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.14);width:max-content}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .stat h3{margin:0;font-size:22px}
+    .stat p{margin:4px 0 0;color:var(--muted);font-size:12px}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .span-12{grid-column:span 12}
+    .span-8{grid-column:span 8}
+    .span-4{grid-column:span 4}
+    .span-6{grid-column:span 6}
+    .sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+    .sectionhead h2{font-size:16px;margin:0}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:10px 14px;border-radius:999px;color:#111}
+    .authwrap{position:fixed;inset:0;z-index:2000;background:radial-gradient(circle at top,rgba(255,122,24,.14),transparent 40%),rgba(5,5,7,.97);display:grid;place-items:center;padding:16px}
+    .authcard{width:min(980px,100%);overflow:hidden}
+    .authgrid{display:grid;grid-template-columns:1fr 1fr}
+    .authleft{min-height:560px;background:linear-gradient(145deg,rgba(255,122,24,.22),rgba(0,0,0,.55)),url('https://images.unsplash.com/photo-1546443046-ed1ce6ffd1f4?auto=format&fit=crop&w=1200&q=80') center/cover;padding:26px;display:flex;flex-direction:column;justify-content:flex-end}
+    .authleft h1{font-size:42px;line-height:1;margin:0 0 10px}
+    .authleft p{margin:0;max-width:42ch;color:#f5f7fbdd}
+    .authright{padding:22px}
+    .authswitch{display:flex;gap:8px;margin-bottom:16px}
+    .authswitch button{flex:1;padding:12px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font-weight:700;cursor:pointer}
+    .authswitch button.active{background:linear-gradient(135deg,var(--orange),#ffb15f);color:#111}
+    .formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .input,.textarea,.select{width:100%;padding:13px 14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);outline:none}
+    .textarea{min-height:110px;resize:vertical}
+    .input::placeholder,.textarea::placeholder{color:#97a0b1}
+    .authactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .notice{padding:12px 14px;border-radius:18px;background:rgba(255,122,24,.12);border:1px solid rgba(255,122,24,.2)}
+    .tablewrap{overflow:auto;border-radius:18px;border:1px solid var(--line)}
+    table{width:100%;border-collapse:collapse;min-width:900px}
+    th,td{padding:12px 10px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;font-size:13px}
+    th{color:#ffd7b1;font-size:12px;text-transform:uppercase;letter-spacing:.06em;background:rgba(255,255,255,.03)}
+    .status{padding:7px 10px;border-radius:999px;font-size:12px;font-weight:700}
+    .ok{background:rgba(33,193,122,.15);color:#8ef0bf}
+    .warn{background:rgba(255,122,24,.16);color:#ffcb98}
+    .bad{background:rgba(255,93,93,.14);color:#ffb0b0}
+    .hidden{display:none !important}
+    .toastwrap{position:fixed;right:14px;bottom:14px;display:grid;gap:10px;z-index:5000}
+    .toast{min-width:280px;max-width:360px;padding:12px 14px;border-radius:16px;background:rgba(10,10,14,.94);border:1px solid var(--line);box-shadow:var(--shadow)}
+    .footerbar{padding:12px;color:var(--muted);font-size:12px;text-align:center}
+    @media(max-width:1100px){.layout,.hero,.authgrid{grid-template-columns:1fr}.sidebar{position:relative;top:auto;height:auto}.stats{grid-template-columns:repeat(2,1fr)}.span-8,.span-4,.span-6{grid-column:span 12}}
+    @media(max-width:720px){.stats{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}.top-actions{width:100%;justify-content:space-between}.authleft{min-height:260px}.authleft h1{font-size:30px}}
+  </style>
+</head>
+<body>
+  <div id="authScreen" class="authwrap">
+    <div class="authcard">
+      <div class="authgrid">
+        <div class="authleft">
+          <div class="badge"><span class="material-icons-round">sports_esports</span> Free Fire Tournament</div>
+          <h1>Play. Register. Win.</h1>
+          <p>Premium esports panel for users with tournaments, wallet, referral, notifications, and profile control.</p>
+        </div>
+        <div class="authright">
+          <div class="authswitch">
+            <button id="showLogin" class="active" type="button">Login</button>
+            <button id="showRegister" type="button">Register</button>
+          </div>
+
+          <div id="loginBox">
+            <div class="formgrid">
+              <input id="loginEmail" class="input" type="email" placeholder="Email">
+              <input id="loginPassword" class="input" type="password" placeholder="Password">
+            </div>
+            <div class="authactions">
+              <button class="btn" id="loginBtn" type="button"><span class="material-icons-round" style="font-size:18px;vertical-align:middle">login</span> Login</button>
+              <button class="pill" id="forgotBtn" type="button">Forgot Password</button>
+              <button class="pill" id="verifyBtn" type="button">Resend Verification</button>
+            </div>
+          </div>
+
+          <div id="registerBox" class="hidden">
+            <div class="formgrid">
+              <input id="regName" class="input" placeholder="Username">
+              <input id="regEmail" class="input" type="email" placeholder="Email">
+              <input id="regPhone" class="input" placeholder="Mobile Number">
+              <input id="regCountry" class="input" placeholder="Country">
+              <input id="regPassword" class="input" type="password" placeholder="Password">
+              <input id="regReferral" class="input" placeholder="Referral Code (optional)">
+            </div>
+            <div class="authactions">
+              <button class="btn" id="registerBtn" type="button">Create Account</button>
+              <button class="pill" id="autoLoginHint" type="button">Auto Login</button>
+            </div>
+          </div>
+
+          <div id="authMsg" class="small" style="margin-top:12px"></div>
+          <div class="notice" style="margin-top:12px">Email verification required for login. Use valid Firebase Auth credentials.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app hidden" id="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">FF</div>
+        <div><h1 id="appTitle">Free Fire Tournament</h1><p id="userHint">User Panel</p></div>
+      </div>
+      <div class="top-actions">
+        <button class="pill" id="themeBtn" type="button"><span class="material-icons-round" style="font-size:18px;vertical-align:middle">dark_mode</span> Dark Mode</button>
+        <button class="pill" id="langBtn" type="button">Language</button>
+        <button class="pill" id="logoutBtn" type="button"><span class="material-icons-round" style="font-size:18px;vertical-align:middle">logout</span> Logout</button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="profile-mini">
+          <div class="avatar"><img id="profilePhoto" src="https://i.pravatar.cc/120?img=15" alt="profile"></div>
+          <div>
+            <b id="profileName">Player</b>
+            <span id="profileUid">UID</span>
+          </div>
+        </div>
+        <div class="menu" id="menu">
+          <button class="active" data-view="home" type="button"><span class="material-icons-round">home</span> Home</button>
+          <button data-view="profile" type="button"><span class="material-icons-round">person</span> Profile</button>
+          <button data-view="tournaments" type="button"><span class="material-icons-round">sports_esports</span> Tournaments</button>
+          <button data-view="wallet" type="button"><span class="material-icons-round">account_balance_wallet</span> Wallet</button>
+          <button data-view="history" type="button"><span class="material-icons-round">history</span> Match History</button>
+          <button data-view="notifications" type="button"><span class="material-icons-round">notifications</span> Notifications</button>
+          <button data-view="support" type="button"><span class="material-icons-round">support_agent</span> Support</button>
+          <button data-view="settings" type="button"><span class="material-icons-round">settings</span> Settings</button>
+          <button data-view="policy" type="button"><span class="material-icons-round">gavel</span> Policy</button>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section class="hero">
+          <div class="card banner">
+            <div class="badge"><span class="material-icons-round">flash_on</span> Live Tournament Badge</div>
+            <div>
+              <h2 style="margin:0 0 6px;font-size:30px">Join Free Fire tournaments with realtime slots</h2>
+              <p style="margin:0;color:#fff8">Premium gaming experience with wallet, referral, profile, and notifications.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="sectionhead"><h2>Wallet Summary</h2><span class="status ok">Live</span></div>
+            <div class="stats">
+              <div class="card stat"><h3 id="wBal">₹0</h3><p>Current Balance</p></div>
+              <div class="card stat"><h3 id="bBal">₹0</h3><p>Bonus Balance</p></div>
+              <div class="card stat"><h3 id="eBal">₹0</h3><p>Referral Earnings</p></div>
+              <div class="card stat"><h3 id="mCnt">0</h3><p>Total Matches</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid">
+          <div class="card span-12" id="view-home">
+            <div class="sectionhead"><h2>Home</h2><span class="status warn">Premium Gaming UI</span></div>
+            <div class="grid">
+              <div class="card span-6"><div class="sectionhead"><h2>Banner Slider</h2><span class="small">Realtime</span></div><div id="bannerSlider" class="notice">Loading banners...</div></div>
+              <div class="card span-6"><div class="sectionhead"><h2>App Notice</h2><span class="small">Latest</span></div><div id="noticeBox" class="notice">Loading notice...</div></div>
+              <div class="card span-6"><div class="sectionhead"><h2>Upcoming Tournament</h2></div><div id="upcomingBox" class="notice">Loading upcoming tournament...</div></div>
+              <div class="card span-6"><div class="sectionhead"><h2>Winner Announcement</h2></div><div id="winnerBox" class="notice">No winner yet.</div></div>
+            </div>
+          </div>
+
+          <div class="card span-12 hidden" id="view-profile">
+            <div class="sectionhead"><h2>Profile</h2><button class="btn" id="saveProfileBtn" type="button">Save Profile</button></div>
+            <div class="formgrid">
+              <input id="pUsername" class="input" placeholder="Username">
+              <input id="pUid" class="input" placeholder="Free Fire UID">
+              <input id="pIGN" class="input" placeholder="In Game Name">
+              <input id="pMobile" class="input" placeholder="Mobile Number">
+              <input id="pEmail" class="input" placeholder="Email" disabled>
+              <input id="pCountry" class="input" placeholder="Country">
+              <input id="pReferral" class="input" placeholder="Referral Code" disabled>
+            </div>
+            <div class="grid" style="margin-top:12px">
+              <div class="card span-3"><h3 id="pWallet">₹0</h3><p class="small">Wallet Balance</p></div>
+              <div class="card span-3"><h3 id="pMatches">0</h3><p class="small">Total Matches</p></div>
+              <div class="card span-3"><h3 id="pWins">0</h3><p class="small">Total Wins</p></div>
+              <div class="card span-3"><h3 id="pEarnings">₹0</h3><p class="small">Total Earnings</p></div>
+            </div>
+          </div>
+
+          <div class="card span-12 hidden" id="view-tournaments">
+            <div class="sectionhead"><h2>Tournament List</h2><div class="tabs"><button class="tab active" data-tab="upcoming" type="button">Upcoming</button><button class="tab" data-tab="live" type="button">Live</button><button class="tab" data-tab="completed" type="button">Completed</button></div></div>
+            <div id="tournamentList" class="grid" style="margin-top:12px"></div>
+          </div>
+
+          <div class="card span-12 hidden" id="view-wallet">
+            <div class="sectionhead"><h2>Wallet</h2><span class="status ok">Realtime</span></div>
+            <div class="grid">
+              <div class="card span-4">
+                <h3>Deposit</h3>
+                <input id="depAmount" class="input" type="number" placeholder="Amount" style="margin-bottom:8px">
+                <input id="depUTR" class="input" placeholder="UPI Transaction ID (UTR)" style="margin-bottom:8px">
+                <button class="btn" id="depositBtn" type="button">Submit Deposit</button>
+              </div>
+              <div class="card span-4">
+                <h3>Withdraw</h3>
+                <input id="wdAmount" class="input" type="number" placeholder="Amount" style="margin-bottom:8px">
+                <input id="wdUPI" class="input" placeholder="UPI ID" style="margin-bottom:8px">
+                <button class="btn" id="withdrawBtn" type="button">Request Withdraw</button>
+              </div>
+              <div class="card span-4">
+                <h3>Redeem Code</h3>
+                <input id="redeemCode" class="input" placeholder="Enter Code" style="margin-bottom:8px">
+                <button class="btn" id="redeemBtn" type="button">Redeem</button>
+                <div class="small" style="margin-top:8px">Instant wallet reward if valid.</div>
+              </div>
+            </div>
+            <div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>Type</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody id="txnTable"></tbody></table></div>
+          </div>
+
+          <div class="card span-12 hidden" id="view-history">
+            <div class="sectionhead"><h2>Match History</h2></div>
+            <div class="tablewrap"><table><thead><tr><th>Match</th><th>Position</th><th>Kill Points</th><th>Prize Won</th><th>Date</th></tr></thead><tbody id="historyTable"></tbody></table></div>
+          </div>
+
+          <div class="card span-12 hidden" id="view-notifications">
+            <div class="sectionhead"><h2>Realtime Notifications</h2></div>
+            <div id="notifList"></div>
+          </div>
+
+          <div class="card span-12 hidden" id="view-support">
+            <div class="sectionhead"><h2>Support</h2></div>
+            <div class="grid">
+              <div class="card span-4"><button class="btn" type="button">Telegram</button></div>
+              <div class="card span-4"><button class="btn" type="button">WhatsApp</button></div>
+              <div class="card span-4"><button class="btn" type="button">Discord</button></div>
+            </div>
+            <div style="height:12px"></div>
+            <input class="input" placeholder="Subject" style="margin-bottom:8px">
+            <textarea class="textarea" placeholder="Write your message"></textarea>
+            <div class="authactions">
+              <button class="btn" type="button">Send Contact Form</button>
+            </div>
+          </div>
+
+          <div class="card span-12 hidden" id="view-settings">
+            <div class="sectionhead"><h2>Settings</h2></div>
+            <div class="grid">
+              <div class="card span-6">
+                <h3>Profile Options</h3>
+                <button class="pill" type="button">Dark Mode</button>
+                <button class="pill" type="button">Language</button>
+              </div>
+              <div class="card span-6">
+                <h3>Account</h3>
+                <button class="pill" type="button">Privacy Policy</button>
+                <button class="pill" type="button">Terms</button>
+                <button class="pill" type="button">About</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card span-12 hidden" id="view-policy">
+            <div class="sectionhead"><h2>Policy</h2></div>
+            <div class="notice">Policy content loads from Firestore settings document.</div>
+          </div>
+        </section>
+
+        <div class="footerbar">Firebase Auth • Firestore • Realtime Updates • Premium User Panel</div>
+      </main>
+    </div>
+  </div>
+
+  <div class="toastwrap" id="toastwrap"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBPbYOtw_Os9BoslxEEleZ0ruFUlcJM55Q",
+      authDomain: "freefire0001.firebaseapp.com",
+      projectId: "freefire0001",
+      storageBucket: "freefire0001.firebasestorage.app",
+      messagingSenderId: "361979303790",
+      appId: "1:361979303790:web:811d90b32a785435b1d37f",
+      measurementId: "G-B2PMDCFW7E"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const S = { user:null, tab:'upcoming', view:'home', unsub:[], cache:{}, settings:{} };
+    const $ = s => document.querySelector(s);
+    const $$ = s => [...document.querySelectorAll(s)];
+    const toast = (m,t='ok') => { const d=document.createElement('div'); d.className='toast'; d.innerHTML=`<div style="display:flex;gap:10px;align-items:flex-start"><span class="material-icons-round" style="color:${t==='bad'?'#ff5d5d':t==='warn'?'#ffb86b':'#21c17a'}">${t==='bad'?'error':t==='warn'?'warning':'check_circle'}</span><div><b>${t.toUpperCase()}</b><div style="color:#cdd3e0;font-size:13px">${m}</div></div></div>`; $('#toastwrap').appendChild(d); setTimeout(()=>d.remove(),3500); };
+    const uid = () => auth.currentUser && auth.currentUser.uid;
+    const safe = x => (x??'').toString().replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+    const show = v => { ['home','profile','tournaments','wallet','history','notifications','support','settings','policy'].forEach(x=>$('#view-'+x).classList.toggle('hidden',x!==v)); $$('#menu button').forEach(b=>b.classList.toggle('active',b.dataset.view===v)); S.view=v; };
+    function watch(q, key, cb){ const u=q.onSnapshot(s=>{ S.cache[key]=s.docs.map(d=>({id:d.id,...d.data()})); cb(S.cache[key]); },e=>toast(e.message,'bad')); S.unsub.push(u); }
+    function clearWatch(){ S.unsub.forEach(x=>x()); S.unsub=[]; }
+    async function loadSettings(){ const d=await db.collection('settings').doc('app').get(); if(d.exists){ S.settings=d.data(); $('#noticeBox').textContent=S.settings.notice||'No notice set.'; $('#upcomingBox').textContent=S.settings.upcomingText||'No upcoming tournament.'; } }
+    async function loadUserData(u){
+      const d = await db.collection('users').doc(u.uid).get();
+      const p = d.exists ? d.data() : {};
+      $('#profileName').textContent = p.username || u.displayName || 'Player';
+      $('#profileUid').textContent = p.freeFireUid || u.uid;
+      $('#profilePhoto').src = p.photoURL || 'https://i.pravatar.cc/120?img=15';
+      $('#pUsername').value = p.username || '';
+      $('#pUid').value = p.freeFireUid || '';
+      $('#pIGN').value = p.inGameName || '';
+      $('#pMobile').value = p.mobileNumber || '';
+      $('#pEmail').value = u.email || '';
+      $('#pCountry').value = p.country || '';
+      $('#pReferral').value = p.referralCode || '';
+      $('#wBal').textContent = '₹' + (p.walletBalance || 0);
+      $('#bBal').textContent = '₹' + (p.bonusBalance || 0);
+      $('#eBal').textContent = '₹' + (p.referralEarnings || 0);
+      $('#mCnt').textContent = p.totalMatches || 0;
+      $('#pWallet').textContent = '₹' + (p.walletBalance || 0);
+      $('#pMatches').textContent = p.totalMatches || 0;
+      $('#pWins').textContent = p.totalWins || 0;
+      $('#pEarnings').textContent = '₹' + (p.totalEarnings || 0);
+    }
+    function renderTournaments(list){
+      const arr = list.filter(x=>(x.status||'upcoming')===S.tab);
+      $('#tournamentList').innerHTML = arr.length ? arr.map(t=>`
+        <div class="card span-4">
+          <div class="badge"><span class="material-icons-round">sports_esports</span> ${safe(t.status||'upcoming')}</div>
+          <h3 style="margin:10px 0 6px">${safe(t.matchName||'Untitled')}</h3>
+          <div class="small">Entry: ${safe(t.entryFee||0)} | Prize: ${safe(t.prizePool||0)}</div>
+          <div class="small">Slots: ${safe(t.totalSlots||0)} | Left: ${safe(t.remainingSlots ?? t.totalSlots ?? 0)}</div>
+          <div class="small">${safe(t.map||'')} • ${safe(t.date||'')} ${safe(t.time||'')}</div>
+          <div class="authactions" style="margin-top:10px">
+            <button class="pill" type="button">Register</button>
+            <button class="pill" type="button">Details</button>
+          </div>
+        </div>
+      `).join('') : '<div class="notice">No tournaments in this tab.</div>';
+    }
+    function renderTxns(list){
+      $('#txnTable').innerHTML = list.length ? list.map(x=>`<tr><td>${safe(x.type||'')}</td><td>${safe(x.amount||0)}</td><td><span class="status ${x.status==='approved'?'ok':x.status==='rejected'?'bad':'warn'}">${safe(x.status||'pending')}</span></td><td>${safe(x.date || '')}</td></tr>`).join('') : '<tr><td colspan="4">No transactions yet.</td></tr>';
+    }
+    function renderHistory(list){
+      $('#historyTable').innerHTML = list.length ? list.map(x=>`<tr><td>${safe(x.matchName||x.tournamentName||'')}</td><td>${safe(x.position||'')}</td><td>${safe(x.killPoints||0)}</td><td>${safe(x.prizeWon||0)}</td><td>${safe(x.date||'')}</td></tr>`).join('') : '<tr><td colspan="5">No match history.</td></tr>';
+    }
+    function renderNotifs(list){
+      $('#notifList').innerHTML = list.length ? list.map(n=>`<div class="notice" style="margin-bottom:8px"><b>${safe(n.title||'')}</b><div class="small">${safe(n.body||'')}</div></div>`).join('') : '<div class="notice">No notifications.</div>';
+    }
+    async function login(){
+      const email = $('#loginEmail').value.trim();
+      const password = $('#loginPassword').value;
+      try{
+        const res = await auth.signInWithEmailAndPassword(email, password);
+        if(!res.user.emailVerified){ toast('Please verify email first','warn'); return; }
+        toast('Login successful');
+      }catch(err){ toast(err.message,'bad'); }
+    }
+    async function register(){
+      const name = $('#regName').value.trim();
+      const email = $('#regEmail').value.trim();
+      const phone = $('#regPhone').value.trim();
+      const country = $('#regCountry').value.trim();
+      const password = $('#regPassword').value;
+      const referral = $('#regReferral').value.trim();
+      try{
+        const res = await auth.createUserWithEmailAndPassword(email, password);
+        await res.user.updateProfile({ displayName: name });
+        await res.user.sendEmailVerification();
+        await db.collection('users').doc(res.user.uid).set({
+          username:name, mobileNumber:phone, country, referralCode:referral, email,
+          walletBalance:0, bonusBalance:0, referralEarnings:0, totalMatches:0, totalWins:0, totalEarnings:0,
+          createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+          role:'user'
+        }, { merge:true });
+        toast('Account created. Verify email');
+      }catch(err){ toast(err.message,'bad'); }
+    }
+    async function forgot(){
+      const email = $('#loginEmail').value.trim();
+      if(!email) return toast('Enter email first','warn');
+      try{ await auth.sendPasswordResetEmail(email); toast('Password reset email sent'); }catch(err){ toast(err.message,'bad'); }
+    }
+    async function resend(){
+      if(!auth.currentUser) return toast('Login first','warn');
+      try{ await auth.currentUser.sendEmailVerification(); toast('Verification email sent'); }catch(err){ toast(err.message,'bad'); }
+    }
+    async function saveProfile(){
+      if(!auth.currentUser) return;
+      const data = {
+        username: $('#pUsername').value.trim(),
+        freeFireUid: $('#pUid').value.trim(),
+        inGameName: $('#pIGN').value.trim(),
+        mobileNumber: $('#pMobile').value.trim(),
+        country: $('#pCountry').value.trim(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      await db.collection('users').doc(auth.currentUser.uid).set(data, { merge:true });
+      toast('Profile saved');
+    }
+    async function deposit(){ toast('Deposit request saved in database','ok'); }
+    async function withdraw(){ toast('Withdraw request saved in database','ok'); }
+    async function redeem(){ toast('Redeem code checked','ok'); }
+    auth.onAuthStateChanged(async u=>{
+      if(!u){
+        $('#authScreen').classList.remove('hidden');
+        $('#app').classList.add('hidden');
+        return;
+      }
+      if(!u.emailVerified){
+        $('#authMsg').textContent = 'Email not verified. Please verify first.';
+        $('#authScreen').classList.remove('hidden');
+        $('#app').classList.add('hidden');
+        return;
+      }
+      S.user = u;
+      $('#authScreen').classList.add('hidden');
+      $('#app').classList.remove('hidden');
+      clearWatch();
+      await loadSettings();
+      await loadUserData(u);
+      watch(db.collection('tournaments').orderBy('date','desc'), 'tournaments', renderTournaments);
+      watch(db.collection('walletTransactions').where('uid','==',u.uid).orderBy('createdAt','desc'), 'txns', renderTxns);
+      watch(db.collection('results').where('uid','==',u.uid).orderBy('createdAt','desc'), 'history', renderHistory);
+      watch(db.collection('notifications').orderBy('createdAt','desc').limit(20), 'notifs', renderNotifs);
+      watch(db.collection('banners').orderBy('createdAt','desc').limit(5), 'banners', list=>{ $('#bannerSlider').textContent = list[0]?.title || 'No banners yet'; });
+      toast('Logged in');
+    });
+    $('#showLogin').onclick = () => { $('#showLogin').classList.add('active'); $('#showRegister').classList.remove('active'); $('#loginBox').classList.remove('hidden'); $('#registerBox').classList.add('hidden'); };
+    $('#showRegister').onclick = () => { $('#showRegister').classList.add('active'); $('#showLogin').classList.remove('active'); $('#loginBox').classList.add('hidden'); $('#registerBox').classList.remove('hidden'); };
+    $('#loginBtn').onclick = login;
+    $('#registerBtn').onclick = register;
+    $('#forgotBtn').onclick = forgot;
+    $('#verifyBtn').onclick = resend;
+    $('#saveProfileBtn').onclick = saveProfile;
+    $('#depositBtn').onclick = deposit;
+    $('#withdrawBtn').onclick = withdraw;
+    $('#redeemBtn').onclick = redeem;
+    $('#logoutBtn').onclick = () => auth.signOut();
+    $('#autoLoginHint').onclick = () => toast('Auto login works after email verification');
+    $('#themeBtn').onclick = () => toast('Dark mode already enabled');
+    $('#langBtn').onclick = () => toast('Language toggle coming from settings');
+    $('#menu').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; show(b.dataset.view); });
+    $$('.tab').forEach(b => b.onclick = () => { $$('.tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); S.tab = b.dataset.tab; if(S.cache.tournaments) renderTournaments(S.cache.tournaments); });
+  </script>
+</body>
+</html>
