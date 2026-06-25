@@ -183,54 +183,74 @@
 
     <!-- Modals -->
     <div class="modal fade" id="policyModalEl" tabindex="-1"><div class="modal-dialog modal-dialog-scrollable modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="policyModalTitleEl">Details</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body" id="policyModalBodyEl" style="min-height: 300px;"></div></div></div></div>
-    <div class="modal-body">
+    <div class="modal fade" id="addAmountModalEl" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
 
-    <div class="text-center">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-wallet-fill me-2"></i>
+                    Deposit Funds
+                </h5>
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"></button>
+            </div>
 
-        <img src="YOUR_QR_IMAGE_LINK"
-             alt="UPI QR"
-             style="width:220px;border-radius:12px;margin-bottom:15px;">
+            <div class="modal-body">
 
-        <p class="small text-secondary">
-            Scan QR code and complete payment
-        </p>
+                <div class="text-center">
 
+                    <img src="YOUR_QR_IMAGE_LINK"
+                         alt="UPI QR"
+                         style="width:220px;border-radius:12px;margin-bottom:15px;">
+
+                    <p class="small text-secondary">
+                        Scan QR code and complete payment
+                    </p>
+
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Amount Paid</label>
+                    <input type="number"
+                           class="form-control"
+                           id="depositAmount"
+                           placeholder="Enter amount">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Transaction ID</label>
+                    <input type="text"
+                           class="form-control"
+                           id="transactionId"
+                           placeholder="Enter transaction ID">
+                </div>
+
+                <div class="alert alert-warning small">
+                    After payment enter Amount and Transaction ID then click Submit Request.
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-custom btn-custom-secondary"
+                        data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <button type="button"
+                        class="btn btn-custom btn-custom-primary"
+                        id="submitDepositBtnEl">
+                    Submit Request
+                </button>
+
+            </div>
+
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label class="form-label">Amount Paid</label>
-        <input type="number"
-               class="form-control"
-               id="depositAmount"
-               placeholder="Enter amount">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Transaction ID</label>
-        <input type="text"
-               class="form-control"
-               id="transactionId"
-               placeholder="Enter transaction ID">
-    </div>
-
-    <div class="alert alert-warning small">
-        After payment enter Amount and Transaction ID then submit request.
-    </div>
-
-    </div><div class="modal-footer">
-
-    <button type="button"
-            class="btn btn-custom btn-custom-secondary"
-            data-bs-dismiss="modal">
-        Cancel
-    </button>
-
-    <button type="button"
-            class="btn btn-custom btn-custom-primary"
-            id="submitDepositBtnEl">
-        Submit Request
-    </button>
-
     </div>
     <div class="modal fade" id="withdrawModalEl" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title"><i class="bi bi-cash-coin me-2"></i> Withdraw Funds</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><p class="small text-secondary">Withdrawable balance: <strong class="text-light" id="withdrawModalBalanceEl">₹0.00</strong></p><div class="mb-3"><label for="withdrawAmountInputEl" class="form-label">Amount (Min ₹<span id="minWithdrawAmountEl">50</span>)</label><input type="number" class="form-control" id="withdrawAmountInputEl" placeholder="Enter amount"></div><div class="mb-3"><label for="withdrawMethodInputEl" class="form-label">Withdrawal Method (UPI/Bank)</label><input type="text" class="form-control" id="withdrawMethodInputEl" placeholder="Enter UPI ID / Bank Details"></div><div id="withdrawStatusMessageEl" class="alert mt-3" style="display: none;"></div></div><div class="modal-footer"><button type="button" class="btn btn-custom btn-custom-secondary" data-bs-dismiss="modal">Cancel</button><button type="button" class="btn btn-custom btn-custom-primary" id="submitWithdrawRequestBtnEl">Submit Request</button></div></div></div></div>
     <div class="modal fade" id="matchDetailsModalEl" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="matchDetailsModalTitleEl">Match Details</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body" id="matchDetailsModalBodyEl"></div></div></div></div>
